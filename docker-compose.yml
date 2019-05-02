@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+
+
+  nodered:
+    image: node
+    container_name: nodered
+    restart: on-failure
+    # ports:
+    #   - '1880:1880'
+    volumes:
+       - ./nodered/:/root/.node-red
+    command: bash -c "npm install -g --unsafe-perm node-red && cd /root/.node-red && npm install && node-red"
+    depends_on:
+      - 'mongoido'
+    links:
+      - mongoido
+
+  sailstranslate:
+    image: node
+    container_name: sailstranslate
+    restart: on-failure
+    ports:
+      - '80:1337'
+    volumes:
+       - ./sailsapi/:/root/sailstranslate
+    command: bash -c "npm i -g --unsafe-perm sails && cd /root/sailstranslate && npm set audit false && npm i && sails lift"
+    depends_on:
+      - 'nodered'
+    links:
+      - nodered
+
+  mongoido:
+    image: bitnami/mongodb:latest
+    container_name: mongoido
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGODB_USERNAME=maor
+      - MONGODB_PASSWORD=123456
+      - MONGODB_DATABASE=maor
+
+
+
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile-alternate
