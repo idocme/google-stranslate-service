@@ -1,4 +1,4 @@
-#Installation
+# Installation
 
 run: docker-compose up
 
@@ -6,7 +6,7 @@ demo http://localhost/
 api http://localhost/api/translate/?from=languagecode&to=languagecode&phrase=Phrase
 
 
-#Language codes
+# Language codes
 
 </br>'en' English
 </br>'ja' Japanese
