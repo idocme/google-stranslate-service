@@ -2,7 +2,7 @@
 
 run: docker-compose up
 
-demo http://localhost/
+demo http://localhost/</br>
 api http://localhost/api/translate/?from=languagecode&to=languagecode&phrase=Phrase
 
 
