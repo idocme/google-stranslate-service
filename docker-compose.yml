@@ -20,8 +20,8 @@ services:
     image: idocoh/nodered-translate:latest
     container_name: nodered
     restart: always
-    ports:
-      - '1880:1880'
+#    ports:
+#      - '1880:1880'
     depends_on:
       - mongoido
     links:
