@@ -2,48 +2,40 @@ version: '3.7'
 
 services:
 
-
-  nodered:
-    image: node
-    container_name: nodered
-    restart: on-failure
-    # ports:
-    #   - '1880:1880'
-    volumes:
-       - ./nodered/:/root/.node-red
-    command: bash -c "npm install -g --unsafe-perm node-red && cd /root/.node-red && npm install && node-red"
-    depends_on:
-      - 'mongoido'
-    links:
-      - mongoido
-
   sailstranslate:
-    image: node
+    image: idocoh/sails-translate:latest
     container_name: sailstranslate
-    restart: on-failure
+    restart: always
     ports:
       - '80:1337'
-    volumes:
-       - ./sailsapi/:/root/sailstranslate
-    command: bash -c "npm i -g --unsafe-perm sails && cd /root/sailstranslate && npm set audit false && npm i && sails lift"
     depends_on:
-      - 'nodered'
+      - nodered
     links:
       - nodered
+    environment:
+       MONGO_URI: mongodb://maor:123456@mongoido:27017/maor
+
+
+  nodered:
+    image: idocoh/nodered-translate:latest
+    container_name: nodered
+    restart: always
+    ports:
+      - '1880:1880'
+    depends_on:
+      - mongoido
+    links:
+      - mongoido
+    environment:
+       MONGO_URI: mongodb://maor:123456@mongoido:27017/maor
 
   mongoido:
-    image: bitnami/mongodb:latest
+    image: bitnami/mongodb
     container_name: mongoido
     restart: always
     ports:
       - '27017:27017'
     environment:
-      - MONGODB_USERNAME=maor
-      - MONGODB_PASSWORD=123456
-      - MONGODB_DATABASE=maor
-
-
-
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile-alternate
+       MONGODB_USERNAME: maor
+       MONGODB_PASSWORD: 123456
+       MONGODB_DATABASE: maor
